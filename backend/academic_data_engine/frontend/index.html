@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RNSIT Academic Data Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+
+<body>
+  <div class="app">
+    <h1>🎓 RNSIT Academic Data Engine</h1>
+    <p class="subtitle">2024 Autonomous Scheme — CIE &amp; SEE Marks Management</p>
+    <div class="stepper" id="stepper"></div>
+    <div id="toast-box"></div>
+
+    <!-- ══ STEP 1: Student Profile ══════════════════════════════════ -->
+    <div class="step active" id="step1">
+      <div class="card">
+        <span class="step-tag">STEP 1 OF 5</span>
+        <div class="card-head">Student Profile</div>
+        <div class="card-sub">Enter the student's basic details</div>
+        <form id="f1" autocomplete="off">
+          <div class="grid2">
+            <div class="group">
+              <label>Full Name *</label>
+              <input id="s-name" name="name" type="text" placeholder="e.g. Bhargav R" required />
+            </div>
+            <div class="group">
+              <label>USN *</label>
+              <input id="s-usn" name="usn" type="text" placeholder="e.g. 1RN22CS001" required />
+            </div>
+            <div class="group">
+              <label>Branch *</label>
+              <select name="branch" required>
+                <option value="">Select branch…</option>
+                <option value="CSE">CSE</option>
+                <option value="ISE">ISE</option>
+                <option value="ECE">ECE</option>
+                <option value="EEE">EEE</option>
+                <option value="ME">ME</option>
+                <option value="CV">CV</option>
+                <option value="AIDS">AI&DS</option>
+                <option value="AIML">AI&ML</option>
+                <option value="CSD">CSD</option>
+              </select>
+            </div>
+            <div class="group">
+              <label>Scheme</label>
+              <input name="scheme" type="text" value="2024" readonly style="opacity:.7" />
+            </div>
+          </div>
+          <div class="row-btns">
+            <span></span>
+            <button type="submit" class="btn btn-primary" id="btn1">Create Profile →</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ══ STEP 2: Semester ══════════════════════════════════════════ -->
+    <div class="step" id="step2">
+      <div class="card">
+        <span class="step-tag">STEP 2 OF 5</span>
+        <div class="card-head">Semester Details</div>
+        <div class="card-sub">Which semester are you entering marks for?</div>
+        <form id="f2">
+          <div class="grid2">
+            <div class="group">
+              <label>Semester *</label>
+              <select name="sem_num" required>
+                <option value="1">Semester 1</option>
+                <option value="2">Semester 2</option>
+                <option value="3" selected>Semester 3</option>
+                <option value="4">Semester 4</option>
+                <option value="5">Semester 5</option>
+                <option value="6">Semester 6</option>
+                <option value="7">Semester 7</option>
+                <option value="8">Semester 8</option>
+              </select>
+            </div>
+            <div class="group">
+              <label>Academic Year *</label>
+              <input name="acad_year" type="text" placeholder="e.g. 2024-25" required />
+            </div>
+          </div>
+          <div class="row-btns">
+            <button type="button" class="btn btn-ghost" onclick="gotoStep(1)">← Back</button>
+            <button type="submit" class="btn btn-primary">Create Semester →</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ══ STEP 3: Add Subjects ══════════════════════════════════════ -->
+    <div class="step" id="step3">
+      <div class="card">
+        <span class="step-tag">STEP 3 OF 5</span>
+        <div class="card-head">Add Subjects</div>
+        <div class="card-sub">Upload your syllabus PDF or add subjects manually</div>
+
+        <div class="mode-toggle">
+          <div class="mode-btn on" data-mode="manual">
+            <div class="ico">✏️</div>
+            <div class="lbl">Manual Entry</div>
+            <div class="desc">Add one by one</div>
+          </div>
+          <div class="mode-btn" data-mode="pdf">
+            <div class="ico">📄</div>
+            <div class="lbl">Upload PDF</div>
+            <div class="desc">Extract from syllabus</div>
+          </div>
+        </div>
+
+        <!-- Manual panel -->
+        <div id="manual-panel">
+          <div class="grid2" style="margin-bottom:12px">
+            <div class="group">
+              <label>Subject Code *</label>
+              <input id="m-code" type="text" placeholder="e.g. BCS301" />
+            </div>
+            <div class="group">
+              <label>Subject Name *</label>
+              <input id="m-name" type="text" placeholder="e.g. Discrete Mathematics" />
+            </div>
+            <div class="group">
+              <label>Subject Type *</label>
+              <select id="m-type">
+                <option value="pcc">PCC — Theory (IA→30 + CCE→20)</option>
+                <option value="ipcc">IPCC — Theory+Lab (IA→20 + CCE→10 + Lab→20)</option>
+                <option value="pccl">PCCL — Pure Lab (Lab Rec→30 + Lab Test→20)</option>
+                <option value="esc">ESC — Elective Science (PCC-style)</option>
+                <option value="aec">AEC — Ability Enhancement (PCC-style)</option>
+                <option value="mc">MC — Mandatory Course (CIE /100, no SEE)</option>
+                <option value="uhv">UHV — Universal Human Values (PCC-style)</option>
+                <option value="other">Other (PCC-style)</option>
+              </select>
+            </div>
+            <div class="group">
+              <label>Credits</label>
+              <input id="m-credits" type="number" min="0" step="0.5" placeholder="e.g. 3" />
+            </div>
+            <div class="group">
+              <label>L-T-P (optional)</label>
+              <input id="m-ltp" type="text" placeholder="e.g. 3-0-2" />
+            </div>
+            <div class="group">
+              <label>Elective Group (optional)</label>
+              <input id="m-bucket" type="text" placeholder="e.g. BUCKET_A" />
+            </div>
+          </div>
+          <button id="btn-add-subj" class="btn btn-outline" style="width:100%">+ Add Subject</button>
+          <div id="manual-list"></div>
+        </div>
+
+        <!-- PDF panel -->
+        <div id="pdf-panel" style="display:none">
+          <div class="alert alert-info"
+            style="margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              📋 Upload the <strong>official syllabus PDF</strong> from the RNSIT website.
+              Subject codes, names, and types will be extracted automatically.
+              You can correct types after upload.
+            </div>
+            <a href="/static/sample_syllabus.pdf" download="sample_syllabus.pdf" class="btn btn-outline"
+              style="white-space:nowrap; margin-left:15px; text-decoration:none; font-size:0.8rem; padding:6px 10px;">📄
+              Download Sample</a>
+          </div>
+          <div class="upload-zone" id="pdf-zone">
+            <div class="ico">📤</div>
+            <div style="font-weight:600;margin-bottom:4px">Drop PDF here or click to browse</div>
+            <div style="font-size:.78rem;color:var(--muted)">Max 20 MB · PDF only</div>
+            <input type="file" id="pdf-input" accept=".pdf" style="display:none" />
+          </div>
+          <div id="pdf-status" style="margin-top:12px"></div>
+        </div>
+
+        <div class="row-btns" style="margin-top:22px">
+          <button class="btn btn-ghost" onclick="gotoStep(2)">← Back</button>
+          <button id="btn-subj-done" class="btn btn-primary">Review Subjects →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ STEP 4: Review Subjects ═══════════════════════════════════ -->
+    <div class="step" id="step4">
+      <div class="card">
+        <span class="step-tag">STEP 4 OF 5</span>
+        <div class="card-head">Review Subjects</div>
+        <div class="card-sub">Confirm subject types and check/uncheck electives</div>
+        <div id="review-container"></div>
+        <div class="row-btns">
+          <button class="btn btn-ghost" onclick="gotoStep(3)">← Back</button>
+          <button class="btn btn-primary" onclick="gotoStep(5)">Enter Marks →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ STEP 5: Enter Marks ════════════════════════════════════════ -->
+    <div class="step" id="step5">
+      <div class="card">
+        <span class="step-tag">STEP 5 OF 5</span>
+        <div class="card-head">Enter Marks</div>
+        <div class="card-sub">Click a subject to enter CIE and SEE marks</div>
+        <div id="marks-subject-list"></div>
+        <div class="row-btns">
+          <button class="btn btn-ghost" onclick="gotoStep(4)">← Back</button>
+          <button class="btn btn-primary" id="btn-summary" onclick="gotoStep(6)">View Summary →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ STEP 6: Summary ════════════════════════════════════════════ -->
+    <div class="step" id="step6">
+      <div class="card">
+        <span class="step-tag">DONE</span>
+        <div class="card-head">Marks Summary</div>
+        <div class="card-sub">Final CIE and SEE marks for all subjects</div>
+        <div id="sum-cards"></div>
+        <hr class="divider" />
+        <div class="section-label">Raw JSON Export</div>
+        <pre id="jsonOut">Loading…</pre>
+        <div class="row-btns">
+          <button class="btn btn-ghost" onclick="gotoStep(5)">← Back</button>
+          <div style="display:flex;gap:10px">
+            <button id="btn-dl-json" class="btn btn-outline" style="display:none;">⬇ Download JSON</button>
+            <button id="btn-restart" class="btn btn-outline">🔄 New Student</button>
+            <button id="btn-analyze" class="btn btn-primary"
+              onclick="window.open('http://localhost:9002/dashboard/analyzer?usn=' + encodeURIComponent(document.getElementById('s-usn').value), '_top')">🚀
+              Analyze Performance</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MARKS MODAL ══════════════════════════════════════════════════ -->
+  <div id="modal-marks" class="modal" style="display:none">
+    <div class="card modal-content" id="modal-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div>
+          <div class="card-head" id="modal-title">Enter Marks</div>
+          <div class="card-sub" style="margin:0" id="modal-sub">All marks are computed automatically per RNSIT 2024
+            scheme</div>
+        </div>
+        <button id="btn-modal-close" class="btn btn-ghost" style="font-size:1.2rem;padding:4px 10px">✕</button>
+      </div>
+      <div id="modal-form-area" style="max-height:60vh;overflow-y:auto;padding-right:4px"></div>
+      <div class="row-btns" style="margin-top:16px">
+        <div id="modal-computed" style="font-size:.78rem;color:var(--muted)"></div>
+        <button id="btn-modal-save" class="btn btn-primary">Save Marks</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js?v=2"></script>
+</body>
+
+</html>
